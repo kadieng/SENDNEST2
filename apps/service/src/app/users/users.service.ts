@@ -12,7 +12,14 @@ export class UsersService {
   ) { }
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    try {
+      const user = this.UserModel.create(createUserDto);
+      return user;
+    } catch (error) {
+      console.log(error.massage);
+      return error.message
+    }
+    
   }
 
   async findAll(): Promise<User[]> {

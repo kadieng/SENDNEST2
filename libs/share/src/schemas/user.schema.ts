@@ -23,6 +23,36 @@ export class User {
   @Prop({
     type: String,
     required: false,
+  })
+  middleName?: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  country!: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  state!: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  address!: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  postalCode?: string;
+
+  @Prop({
+    type: String,
+    required: false,
     enum: Role,
     default: Role.User
   })
@@ -59,6 +89,13 @@ export class User {
     default:false
   })
   IsLoggedIn?:boolean;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default:false
+  })
+  IsVerified?:boolean;
 
   @Prop({
     type: String,

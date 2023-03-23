@@ -1,4 +1,4 @@
-export interface IUser {
+export interface User {
     _id: string;
     username: string;
     email: string;
@@ -6,6 +6,11 @@ export interface IUser {
     password: string;
     firstName:string;
     lastName:string;
+    middleName:string;
     role:string;
     avatar: string;
+    country:string;
+    state:string;
+    address:string;
+
 }
