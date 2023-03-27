@@ -9,8 +9,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { CreateUserDto, UserInterface, UpdateUserDto } from '@wiremon';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }

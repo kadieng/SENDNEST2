@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Role } from '../enums';
+import { Role } from '../../enums';
 
 
 export type UserDocument = User & Document;
@@ -62,7 +62,7 @@ export class User {
     type: String,
     required: true,
   })
-  phone!: string; 
+  phone!: string;
 
   @Prop({
     type: String,
@@ -86,23 +86,23 @@ export class User {
   @Prop({
     type: Boolean,
     required: false,
-    default:false
+    default: false
   })
-  IsLoggedIn?:boolean;
+  IsLoggedIn?: boolean;
 
   @Prop({
     type: Boolean,
     required: false,
-    default:false
+    default: false
   })
-  IsVerified?:boolean;
+  IsVerified?: boolean;
 
   @Prop({
     type: String,
     required: false,
-    unique:true
+    unique: true
   })
-  username?:string;  
+  username?: string;
 
 }
 

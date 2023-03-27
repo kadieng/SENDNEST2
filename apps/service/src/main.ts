@@ -6,13 +6,35 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+
+  const configSwagger = new DocumentBuilder()
+    .setTitle('sendNest Api')
+    .setDescription('The sendNest API description')
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        description: `Please enter access token here!`,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
+        type: 'http',
+        in: 'Header',
+      },
+      'access-token'
+      )
+    .build();
+  const document = SwaggerModule.createDocument(app, configSwagger);
+  SwaggerModule.setup('api', app, document);
+
 
   //using config service to make use of env file`
   const config = app.get(ConfigService);
