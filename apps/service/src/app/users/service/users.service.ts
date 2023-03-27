@@ -12,8 +12,8 @@ export class UsersService {
 
   constructor(
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    @InjectModel(VerifyUserSignup.name) private readonly VerifyUserSignupModel: Model<VerifyUserSignupDocument>
-    // private readonly cloudinary: CloudinaryService
+    @InjectModel(VerifyUserSignup.name) private readonly UserSignupModel: Model<VerifyUserSignupDocument>
+
   ) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -24,9 +24,10 @@ export class UsersService {
       data.password = await bcrypt.hash(data.password, saltOrRounds);
 
       const token: string = gen(6);
+
       const user = await this.UserModel.create(data);
 
-      const verifyToken = await this.VerifyUserSignupModel.create({ email: user.email, otp: token });
+      const verifyToken = await this.UserSignupModel.create({ email: user.email, otp: token });
 
       return user;
 
@@ -79,17 +80,20 @@ export class UsersService {
   async verifyUserToken(payload: verifyTokenInterface): Promise<Object> {
     try {
 
-      const verifyUser = await this.VerifyUserSignupModel.findOne({ email: payload.email });
+      const verifyUser = await this.UserSignupModel.findOne({ email: payload.email });
+
       if (verifyUser.otp == payload.otp) {
-        const updateUser = await this.UserModel.findOneAndUpdate({ email: verifyUser.email }, { IsVerified: true }, { new: true })
+        const updateUser = await await this.UserModel.findOneAndUpdate({ email: verifyUser.email }, { IsVerified: true }, { new: true }).select('-__v -password');
         return {
           user: updateUser,
           "message": "verification successful"
         };
-      }else{
-        return {"massage":"verification not successful"}
+      } else {
+        return { "massage": "verification not successful" }
       }
-      // return verifyUser;
+
+      return { "message": "not found" }
+
     } catch (error) {
       return error.massage;
     }

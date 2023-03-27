@@ -14,4 +14,5 @@ export interface UserInterface {
     country: string;
     state: string;
     address: string;
+    
 }

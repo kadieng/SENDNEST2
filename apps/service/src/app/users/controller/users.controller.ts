@@ -8,13 +8,16 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
-import { CreateUserDto, UserInterface, UpdateUserDto } from '@wiremon';
+import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface } from "@wiremon";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+
+  ) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -39,5 +42,11 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Post('/verify_user_token')
+  verifyUserOtp(@Body() payload: verifyTokenInterface) {
+    
+    return this.usersService.verifyUserToken(payload);
   }
 }

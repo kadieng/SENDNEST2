@@ -3,15 +3,19 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
-import { User, UserSchema } from '@wiremon';
+import { User, UserSchema, VerifyUserSignup, VerifyUserSignupSchema } from "@wiremon";
 import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersService } from '../users/service/users.service';
+import { UsersModule } from '../users/users.module';
 
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: VerifyUserSignup.name, schema: VerifyUserSignupSchema }
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     // EmailModule,
     // CloudinaryModule,
@@ -21,8 +25,8 @@ import { UsersService } from '../users/service/users.service';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService,JwtStrategy,UsersService],
+  providers: [AuthService, JwtStrategy, UsersService],
   exports: [AuthService, JwtStrategy, PassportModule],
 
 })
-export class AuthModule {}
+export class AuthModule { }

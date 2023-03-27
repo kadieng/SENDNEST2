@@ -10,6 +10,10 @@ export class CreateUserDto {
     @IsString()
     lastName!: string;
 
+    @IsString()
+    @IsOptional()
+    otp?: string;
+
     @IsNotEmpty()
     @IsString()
     middleName!: string;
@@ -39,11 +43,11 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     avatar?: string;
-   
+
     @IsNotEmpty()
     @IsEmail()
     email!: string;
-    
+
     @IsNotEmpty()
     @IsString()
     password!: string;
