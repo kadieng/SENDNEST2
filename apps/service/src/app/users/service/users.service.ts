@@ -6,6 +6,7 @@ import { CreateUserDto, UpdateUserDto, UpdateUserInterface, User, UserDocument, 
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { gen } from 'n-digit-token';
+import { updatePasswordInterface } from "libs/share/src/interfaces/user/updatePass.interface";
 
 @Injectable()
 export class UsersService {
@@ -96,6 +97,27 @@ export class UsersService {
 
     } catch (error) {
       return error.massage;
+    }
+
+  }
+
+  async updateUserPassword(id: string, payload: updatePasswordInterface) {
+    try {
+
+      const saltOrRounds = 10;   
+      const user = await this.UserModel.findOne({ id });
+      
+      const isMatch = await bcrypt.compare(payload.oldpassword, user.password);
+
+      if (isMatch) {
+        let password = await bcrypt.hash(payload.newpassword, saltOrRounds);
+        const updated = await this.UserModel.findOneAndUpdate({ _id: user.id }, { password: password }, { new: true })
+        return { "message": "password updated succesfully" }
+      } else {
+        return { "message": "password mismatch" }
+      }
+    } catch (error) {
+      return error;
     }
 
   }

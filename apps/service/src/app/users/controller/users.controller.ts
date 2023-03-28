@@ -10,6 +10,7 @@ import {
 import { UsersService } from '../service/users.service';
 import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface } from "@wiremon";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { updatePasswordInterface } from "libs/share/src/interfaces/user/updatePass.interface";
 
 @ApiTags('Users')
 @Controller('users')
@@ -46,7 +47,11 @@ export class UsersController {
 
   @Post('/verify_user_token')
   verifyUserOtp(@Body() payload: verifyTokenInterface) {
-    
     return this.usersService.verifyUserToken(payload);
+  }
+
+  @Post(':id/password_update')
+  async updatePassword(@Param() id: string, @Body() payload: updatePasswordInterface){
+    return this.usersService.updateUserPassword(id, payload);
   }
 }
