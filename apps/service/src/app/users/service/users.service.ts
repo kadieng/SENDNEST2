@@ -104,9 +104,9 @@ export class UsersService {
   async updateUserPassword(id: string, payload: updatePasswordInterface) {
     try {
 
-      const saltOrRounds = 10;   
+      const saltOrRounds = 10;
       const user = await this.UserModel.findOne({ id });
-      
+
       const isMatch = await bcrypt.compare(payload.oldpassword, user.password);
 
       if (isMatch) {
@@ -122,5 +122,8 @@ export class UsersService {
 
   }
 
+  async sendMail() {
+
+  }
 
 }
