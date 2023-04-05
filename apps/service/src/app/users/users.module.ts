@@ -4,10 +4,13 @@ import { UsersService } from './service/users.service';
 import { UsersController } from './controller/users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema, VerifyUserSignup, VerifyUserSignupSchema } from '@wiremon';
+import { MailingModule } from '../mailing/mailing.module';
+import { MailingService } from '../mailing/mailing.service';
 
 @Module({
 
   imports: [
+    MailingModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: VerifyUserSignup.name, schema: VerifyUserSignupSchema }
@@ -15,7 +18,7 @@ import { User, UserSchema, VerifyUserSignup, VerifyUserSignupSchema } from '@wir
 
   ],
   controllers: [UsersController],
-  providers: [UsersService], 
+  providers: [UsersService,MailingService], 
   exports: [UsersService]
 })
 export class UsersModule { }

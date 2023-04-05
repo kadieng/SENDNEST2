@@ -7,14 +7,16 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { gen } from 'n-digit-token';
 import { updatePasswordInterface } from "libs/share/src/interfaces/user/updatePass.interface";
+import { MailingService } from '../../mailing/mailing.service';
+
 
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    @InjectModel(VerifyUserSignup.name) private readonly UserSignupModel: Model<VerifyUserSignupDocument>
-
+    @InjectModel(VerifyUserSignup.name) private readonly UserSignupModel: Model<VerifyUserSignupDocument>,
+    private readonly sgmail:MailingService
   ) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -25,6 +27,7 @@ export class UsersService {
       data.password = await bcrypt.hash(data.password, saltOrRounds);
 
       const token: string = gen(6);
+      await this.sgmail.sendEmail({ email: data.email, otp: token })
 
       const user = await this.UserModel.create(data);
 
@@ -121,9 +124,4 @@ export class UsersService {
     }
 
   }
-
-  async sendMail() {
-
-  }
-
 }

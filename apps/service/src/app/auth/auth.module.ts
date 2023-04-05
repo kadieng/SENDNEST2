@@ -8,10 +8,12 @@ import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersService } from '../users/service/users.service';
 import { UsersModule } from '../users/users.module';
+import { MailingModule } from '../mailing/mailing.module';
 
 
 @Module({
   imports: [
+    MailingModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: VerifyUserSignup.name, schema: VerifyUserSignupSchema }
