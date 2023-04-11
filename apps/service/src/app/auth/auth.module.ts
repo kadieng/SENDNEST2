@@ -9,11 +9,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersService } from '../users/service/users.service';
 import { UsersModule } from '../users/users.module';
 import { MailingModule } from '../mailing/mailing.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 
 @Module({
   imports: [
     MailingModule,
+    CloudinaryModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: VerifyUserSignup.name, schema: VerifyUserSignupSchema }

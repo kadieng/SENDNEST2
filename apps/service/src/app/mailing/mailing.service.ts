@@ -14,7 +14,7 @@ export class MailingService {
       to: payload.email,
       from: 'sendnest55@gmail.com',
       subject: 'welcome to sendnest',
-      text: `your otp for your sendnest accout is ${payload.otp}`
+      text: `${payload.message} ${payload.otp}`
     })
 
     console.log('success');
