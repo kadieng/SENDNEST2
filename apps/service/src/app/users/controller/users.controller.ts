@@ -15,6 +15,7 @@ import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 import { updatePasswordInterface } from "libs/share/src/interfaces/user/updatePass.interface";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Multer } from 'multer';
+import { BeneficiariesInterface } from 'libs/share/src/interfaces/user/beneficiaries.interface';
 
 @ApiTags('Users')
 @Controller('users')
@@ -69,10 +70,15 @@ export class UsersController {
     return await this.usersService.verifyResetPassword(id, token);
   }
 
-  @Post('upload')
+  @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
   uploadImage(@UploadedFile() file: Express.Multer.File) {
     return this.usersService.uploadImageToCloudinary(file);
+  }
+
+  @Post('/create/beneficiaries')
+  async createBeneficiaries(@Body() payload: BeneficiariesInterface) {    
+    return this.usersService.createBeneficiaries(payload);
   }
 
 }

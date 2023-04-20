@@ -2,7 +2,7 @@ import { VerifyUserSignup, VerifyUserSignupDocument } from './../../../../../../
 import { generatePass } from './../../../../../../libs/share/src/Hashing/hashPassword';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserDto, resetPassword, resetPasswordDocument, UpdateUserDto, UpdateUserInterface, User, UserDocument, UserInterface, verifyTokenInterface } from '@wiremon';
+import { Beneficiaries, BeneficiariesDocument, CreateUserDto, resetPassword, resetPasswordDocument, UpdateUserDto, UpdateUserInterface, User, UserDocument, UserInterface, verifyTokenInterface } from '@wiremon';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { gen } from 'n-digit-token';
@@ -10,6 +10,8 @@ import { updatePasswordInterface } from "libs/share/src/interfaces/user/updatePa
 import { MailingService } from '../../mailing/mailing.service';
 import { JwtService } from '@nestjs/jwt';
 import { CloudinaryService } from '../../cloudinary/services/cloudinary.service';
+import { BenficiariesDto } from "libs/share/src/dtos/user/beneficiaries.dto";
+import { BeneficiariesInterface } from "libs/share/src/interfaces/user/beneficiaries.interface";
 
 
 @Injectable()
@@ -21,7 +23,8 @@ export class UsersService {
     @InjectModel(VerifyUserSignup.name) private readonly UserSignupModel: Model<VerifyUserSignupDocument>,
     private readonly sgmail: MailingService,
     private readonly jwtService: JwtService,
-    private readonly cloudinary: CloudinaryService
+    private readonly cloudinary: CloudinaryService,
+    @InjectModel(Beneficiaries.name) private readonly BeneficiariesModel: Model<BeneficiariesDocument>,
 
   ) { }
 
@@ -179,5 +182,16 @@ export class UsersService {
       return error.message;
     }
   }
+
+  async createBeneficiaries(payload: BenficiariesDto): Promise<BeneficiariesInterface> {
+    try {
+      const Bene = await this.BeneficiariesModel.create(payload);
+      return Bene;
+    } catch (error) {
+      return error.message;
+    }  
+  }
+
+
 
 }
