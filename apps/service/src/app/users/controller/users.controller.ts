@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
-import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface } from "@wiremon";
+import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface, GetUser } from "@wiremon";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { updatePasswordInterface } from "libs/share/src/interfaces/user/updatePass.interface";
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -33,7 +33,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.usersService.findAll();
@@ -87,8 +87,19 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/create/beneficiaries')
-  async createBeneficiaries(@Body() payload: BeneficiariesInterface) {
+  async createBeneficiaries(@GetUser() user, @Body() payload: BeneficiariesInterface) {
+    payload.user = user.id;
     return this.usersService.createBeneficiaries(payload);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/get_all/beneficiaries')
+  async getAllUserBeneficiaries(@GetUser() userId) {
+    return this.usersService.getAllUserBeneficiaries(userId.id);
+  }
+
+
+
+
 
 }

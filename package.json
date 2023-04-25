@@ -2,7 +2,9 @@
   "name": "wiremon",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx run service:serve"
+  },
   "private": true,
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",

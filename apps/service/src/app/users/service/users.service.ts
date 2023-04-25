@@ -183,15 +183,23 @@ export class UsersService {
     }
   }
 
-  async createBeneficiaries(payload: BenficiariesDto): Promise<BeneficiariesInterface> {
+  async createBeneficiaries(payload: BenficiariesDto) {
     try {
+     
+      const check = await this.BeneficiariesModel.findOne({ 'accountNumber': payload.accountNumber });
+      if (check) {
+        return {message:"beneficiary with details already exist"}
+      }
       const Bene = await this.BeneficiariesModel.create(payload);
       return Bene;
     } catch (error) {
       return error.message;
-    }  
+    }
   }
 
-
+  async getAllUserBeneficiaries(userId: string): Promise<BeneficiariesInterface[]> {
+    // console.log(userId);
+    return await this.BeneficiariesModel.find({ user: userId });
+  }
 
 }
