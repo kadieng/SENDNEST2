@@ -14,9 +14,9 @@ services:
   server:
     build:
       context: ./
-      target: development-build-stage
+      # target: development-build-stage
       dockerfile: dockerfile
-    container_name: server
+    container_name: sendnest
     ports:
       - '3000:3000'
     volumes:
