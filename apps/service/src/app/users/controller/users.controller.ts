@@ -34,7 +34,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.usersService.findAll();
@@ -99,9 +99,5 @@ export class UsersController {
   async getAllUserBeneficiaries(@GetUser() userId) {
     return this.usersService.getAllUserBeneficiaries(userId.id);
   }
-
-
-
-
 
 }
