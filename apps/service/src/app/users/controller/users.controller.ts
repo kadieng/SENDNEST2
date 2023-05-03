@@ -29,7 +29,8 @@ export class UsersController {
 
 
   @Post('/signup')
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
+    
     return this.usersService.create(createUserDto);
   }
 
@@ -65,6 +66,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Post(':id/password_update')
   async updatePassword(@Param() id: string, @Body() payload: updatePasswordInterface) {
+    
     return this.usersService.updateUserPassword(id, payload);
   }
 

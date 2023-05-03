@@ -40,23 +40,21 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-
-      const saltOrRounds = 10;
-      const data = { ...createUserDto }
-      data.password = await bcrypt.hash(data.password, saltOrRounds);
+      
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10);  
+      
       let message = 'your sendnest otp is '
       const token: string = gen(6);
-      await this.sgmail.sendEmail({ email: data.email, message, otp: token })
-
-      const user = await this.UserModel.create(data);
-
-      const verifyToken = await this.UserSignupModel.create({ email: user.email, otp: token });
-
+      const user = await this.UserModel.create(createUserDto);
+      
+      const sendemail = await this.sgmail.sendEmail({ email: createUserDto.email, message, otp: token })
+      const verifyToken = await this.UserSignupModel.create({ email:createUserDto.email, otp: token });
+      
       return user;
-
+     
     } catch (error) {
 
-      console.log(error.massage);
+      // console.log(error.massage);
       return error.message
     }
 
@@ -130,7 +128,7 @@ export class UsersService {
       const user = await this.UserModel.findOne({ id });
 
       const isMatch = await bcrypt.compare(payload.oldpassword, user.password);
-
+      console.log(isMatch)
       if (isMatch) {
         let password = await bcrypt.hash(payload.newpassword, saltOrRounds);
         const updated = await this.UserModel.findOneAndUpdate({ _id: user.id }, { password: password }, { new: true })
