@@ -64,10 +64,10 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':id/password_update')
-  async updatePassword(@Param() id: string, @Body() payload: updatePasswordInterface) {
-    
-    return this.usersService.updateUserPassword(id, payload);
+  @Post('/password_update')
+  async updatePassword(@GetUser() user, @Body() payload: updatePasswordInterface) {
+    payload.user = user.id;
+    return this.usersService.updateUserPassword(payload);
   }
 
   @Post('/reset-password')
