@@ -14,8 +14,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
         secure: true,
         // secure: false,
         auth: {
-          user: 'sendnest55@gmail.com',
-          pass: 'pzglomythctudckr',
+          user: 'kevinkaslong@gmail.com',
+          pass: 'diqqxtmwopeegdbh',
           // user: "api",
           // pass:"b73a4119145a17cfabe24a73dff64707"
         },
