@@ -1,4 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { User } from '@wiremon';
+import { SchemaTypes } from 'mongoose';
 
 export type resetPasswordDocument = resetPassword & Document;
 
@@ -12,14 +14,7 @@ export class resetPassword {
     required: true,
     unique: true
   })
-  email!: string;
-
-  @Prop({
-    type: String,
-    required: true,
-
-  })
-  otp!: string;
+  email!: string;  
 
   @Prop({
     type: Boolean,
@@ -33,6 +28,9 @@ export class resetPassword {
     required: true,
   })
   token!: string;
+
+  @Prop({ type: SchemaTypes.ObjectId, required: true, ref: 'User' })
+  user!: string | User;
 
 }
 

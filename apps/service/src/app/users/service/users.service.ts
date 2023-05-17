@@ -20,7 +20,8 @@ import { BeneficiariesInterface } from "libs/share/src/interfaces/user/beneficia
 export class UsersService {
 
   constructor(
-
+    
+    @InjectModel(resetPassword.name) private readonly RestPassword: Model<resetPasswordDocument>,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
     @InjectModel(VerifyUserSignup.name) private readonly UserSignupModel: Model<VerifyUserSignupDocument>,
     private readonly sgmail: MailingService,
@@ -52,10 +53,8 @@ export class UsersService {
       
       return user;
      
-    } catch (error) {
-
-      // console.log(error.massage);
-      return error.message
+    } catch (error) {      
+      return { "message": error.message }
     }
 
   }
@@ -129,7 +128,7 @@ export class UsersService {
       
 
       const isMatch = await bcrypt.compare(payload.oldpassword, user.password);
-      console.log(isMatch)
+      
       if (isMatch) {
         let password = await bcrypt.hash(payload.newpassword, saltOrRounds);
         const updated = await this.UserModel.findOneAndUpdate({ _id: user.id }, { password: password }, { new: true })
@@ -144,7 +143,7 @@ export class UsersService {
   }
 
 
-  async resetPassword(data: any) {
+  async resetPassword(req:any, data: any) {
     //make sure user exist
     const user = await this.UserModel.findOne({ email: data.email });
 
@@ -157,10 +156,10 @@ export class UsersService {
     const payload = {
       email: user.email,
       id: user.id
-    }
+    }    
 
     const token = this.jwtService.sign(payload)
-    const link = `http://localhost:3000/reset-password/${user.id}/${token}`;
+    const link = `https://appsendnest.onrender.com${req.originalUrl}/${user.id}/${token}`;
     //send email
     const mail = await this.sgmail.sendEmail({ email: data.email, otp: link, message: 'your reset password like is ' })
     // console.log(mail)
@@ -170,13 +169,13 @@ export class UsersService {
 
   async verifyResetPassword(id: string, token: string) {
 
-
+    
     try {
-      const user = await this.UserModel.findOne({ id })
-      console.log(user)
+      const user = await this.UserModel.findOne({ _id:id })
+      
       if (user) {
-        let verifytoken = this.jwtService.verify(token, { secret: 'hard!to-guess_secret' });
-        console.log(verifytoken);
+        let verifytoken = await this.jwtService.verify(token);
+        // console.log(verifytoken);
         return { message: 'successful' }
       }
     } catch (error) {

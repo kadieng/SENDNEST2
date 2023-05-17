@@ -3,7 +3,7 @@ import { Module, Controller } from '@nestjs/common';
 import { UsersService } from './service/users.service';
 import { UsersController } from './controller/users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema, VerifyUserSignup, VerifyUserSignupSchema } from '@wiremon';
+import { resetPassword, resetPasswordSchema, User, UserSchema, VerifyUserSignup, VerifyUserSignupSchema } from '@wiremon';
 import { MailingModule } from '../mailing/mailing.module';
 import { MailingService } from '../mailing/mailing.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -22,6 +22,7 @@ import { BeneficiariesSchema } from "libs/share/src/schemas/user/beneficiaries.s
     CloudinaryModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
+      { name: resetPassword.name, schema: resetPasswordSchema },
       { name: Beneficiaries.name, schema: BeneficiariesSchema },
       { name: VerifyUserSignup.name, schema: VerifyUserSignupSchema }
     ]),

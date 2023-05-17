@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface, GetUser } from "@wiremon";
@@ -71,12 +72,14 @@ export class UsersController {
   }
 
   @Post('/reset-password')
-  async resetPassword(@Body() payload: any) {
-    return await this.usersService.resetPassword(payload);
+  async resetPassword(@Body() payload: any, @Req() req: Request) {
+    
+    return await this.usersService.resetPassword(req,payload);
   }
 
   @Get('/reset-password/:id/:token')
-  async verifyResetPasswords(@Param() id: string, token: string) {
+  async verifyResetPasswords(@Param('id') id: string, @Param('token') token: string) {
+    
     return await this.usersService.verifyResetPassword(id, token);
   }
 
