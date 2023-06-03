@@ -92,7 +92,7 @@ export class UsersService {
       const updateUser = await this.UserModel.findByIdAndUpdate({ _id: id }, updateUserDto, { new: true }).select('-__v -password');
       return updateUser;
     } catch (error) {
-      console.log(error.message)
+      
       return error.message
     }
 
@@ -114,17 +114,10 @@ export class UsersService {
       const verifyUser = await this.UserSignupModel.findOne({ email: payload.email });
 
       if (verifyUser.otp == payload.otp) {
-        const updateUser = await await this.UserModel.findOneAndUpdate({ email: verifyUser.email }, { IsVerified: true }, { new: true }).select('-__v -password');
-        return {
-          user: updateUser,
-          "message": "verification successful"
-        };
-      } else {
-        return { "massage": "verification not successful" }
-      }
-
-      return { "message": "not found" }
-
+        const updateUser = await this.UserModel.findOneAndUpdate({ email: verifyUser.email }, { IsVerified: true }, { new: true }).select('-__v -password');
+        return updateUser;        
+      } 
+      return false
     } catch (error) {
       return error.massage;
     }
@@ -143,9 +136,9 @@ export class UsersService {
       if (isMatch) {
         let password = await bcrypt.hash(payload.newpassword, saltOrRounds);
         const updated = await this.UserModel.findOneAndUpdate({ _id: user.id }, { password: password }, { new: true })
-        return { "message": "password updated succesfully" }
+        return updated
       } else {
-        return { "message": "password mismatch" }
+        return false;
       }
     } catch (error) {
       return error;

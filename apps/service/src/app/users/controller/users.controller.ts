@@ -12,6 +12,7 @@ import {
   Req,
   Res ,
   ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface, GetUser } from "@wiremon";
@@ -36,7 +37,7 @@ export class UsersController {
   async create(@Body(ValidationPipe) createUserDto: CreateUserDto,@Res() res: Response) {
     const emailExists = await this.usersService.checkEmailExists(createUserDto.email);
     const userNameExists = await this.usersService.checkUserNameExists(createUserDto.username);
-    
+
     if (emailExists) {
       return res.status(400).json({
         "statusCode":400,
@@ -62,14 +63,33 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll(@Res() res: Response) {
+    const data = await this.usersService.findAll();
+    return res.status(200).json({
+      "statusCode": 200,
+      "message": "success",
+      data
+    })
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<UserInterface> {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string, @Res() res: Response): Promise<any> {
+    try {
+      const data = await this.usersService.findOne(id);
+      return res.status(200).json({
+        "statusCode": 200,
+        "message": "success",
+        data
+      })
+        
+    } catch (error) {
+      return res.json({
+        "statusCode": error.statusCode,
+        "message": error.message,        
+      })
+    }
+    
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -85,21 +105,57 @@ export class UsersController {
   }
 
   @Post('/verify_user_token')
-  verifyUserOtp(@Body() payload: verifyTokenInterface) {
-    return this.usersService.verifyUserToken(payload);
+  async verifyUserOtp(@Body() payload: verifyTokenInterface, @Res() res:Response) {
+     try {
+       const data = await this.usersService.verifyUserToken(payload);
+       if (!data) {
+         return res.status(400).json({
+            "statusCode":400,
+            "message": "invalid datails",
+            "error":"bad request"
+          })
+       } 
+
+      return res.json({
+        "statusCode":201,
+        "message": "success",
+        data
+      })
+       
+     } catch (error) {
+       return res.json({
+         "statusCode": error.statusCode,
+         "message":error.message
+       })
+     }    
+    
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/password_update')
-  async updatePassword(@GetUser() user, @Body() payload: updatePasswordInterface) {
+  async updatePassword(@GetUser() user, @Body() payload: updatePasswordInterface,@Res() res:Response) {
     payload.user = user.id;
-    return this.usersService.updateUserPassword(payload);
+    const data = await this.usersService.updateUserPassword(payload);
+    if (!data) {
+      return res.json({
+        "statusCode": 400,
+        "message": "password mismach",      
+      })
+    }
+    return res.json({
+      "statusCode": 201,
+      "message": "success",
+      data
+    })
   }
 
   @Post('/reset-password')
-  async resetPassword(@Body() payload: any, @Req() req: Request) {
-    
-    return await this.usersService.resetPassword(req,payload);
+  async resetPassword(@Body() payload: any, @Req() req: Request,@Res() res:Response) {    
+    const data =  await this.usersService.resetPassword(req, payload);
+    return res.json({
+      "statusCode": 201,
+      "message": "success",      
+    })
   }
 
   @Get('/reset-password/:id/:token')
@@ -117,15 +173,25 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/create/beneficiaries')
-  async createBeneficiaries(@GetUser() user, @Body(ValidationPipe) payload: BeneficiariesInterface) {
+  async createBeneficiaries(@GetUser() user, @Body(ValidationPipe) payload: BeneficiariesInterface,@Res() res:Response) {
     payload.user = user.id;
-    return this.usersService.createBeneficiaries(payload);
+    const data = await this.usersService.createBeneficiaries(payload);
+    return res.status(201).json({
+      "statusCode": 201,
+      "message": "success",
+      data
+    })
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/get_all/beneficiaries')
-  async getAllUserBeneficiaries(@GetUser() userId) {
-    return this.usersService.getAllUserBeneficiaries(userId.id);
+  async getAllUserBeneficiaries(@GetUser() userId, @Res() res:Response) {
+    const data = await this.usersService.getAllUserBeneficiaries(userId.id);
+    return res.status(200).json({
+      "statusCode": 200,
+      "message": "success",
+      data
+    })
   }
 
 }
