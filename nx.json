@@ -2,8 +2,8 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "npmScope": "wiremon",
   "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
+    "default": {      
+      "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
           "build",
@@ -54,3 +54,5 @@
     "sharedGlobals": []
   }
 }
+
+
