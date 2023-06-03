@@ -1,33 +1,35 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+// import { JoiSchema,CREATE, UPDATE } from 'nestjs-joi';
+// import * as Joi from 'joi';
 
 export class CreateUserDto {
 
-    @IsNotEmpty()
-    @IsString()
+    @IsNotEmpty()        
+    @IsString()    
     firstName!: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString() 
     lastName!: string;
 
     @IsString()
     @IsOptional()
     otp?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    middleName!: string;
+    middleName?: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()   
     country!: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()   
     state!: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()    
     address!: string;
 
     @IsOptional()
@@ -38,6 +40,7 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @IsString()
+    
     phone!: string;
 
     @IsOptional()
@@ -45,12 +48,17 @@ export class CreateUserDto {
     avatar?: string;
 
     @IsNotEmpty()
-    @IsEmail()
+    @IsString()
+    @IsEmail()    
     email!: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()     
     password!: string;
+
+    @IsNotEmpty()
+    @IsString()     
+    username!: string;
 
 }
 

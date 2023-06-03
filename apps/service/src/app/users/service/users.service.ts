@@ -39,13 +39,24 @@ export class UsersService {
     });
   }
 
+  async checkEmailExists(email:string) {
+    const check = await this.UserModel.findOne({ email });
+    return check;
+  }
+
+  async checkUserNameExists(username:string) {
+    const check = await this.UserModel.findOne({ username });
+    return check;
+  }
+  
   async create(createUserDto: CreateUserDto) {
     try {
       
-      createUserDto.password = await bcrypt.hash(createUserDto.password, 10);  
-      
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10);      
+
       let message = 'your sendnest otp is '
-      const token: string = gen(6);
+      const token: string = gen(6);      
+      
       const user = await this.UserModel.create(createUserDto);
       
       const sendemail = await this.sgmail.sendEmail({ email: createUserDto.email, message, otp: token })
@@ -54,7 +65,7 @@ export class UsersService {
       return user;
      
     } catch (error) {      
-      return { "message": error.message }
+      return { "message":error}
     }
 
   }

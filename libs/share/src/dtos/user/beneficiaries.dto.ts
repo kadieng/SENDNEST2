@@ -1,22 +1,25 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { JoiSchema,CREATE, UPDATE } from 'nestjs-joi';
+import * as Joi from 'joi';
 
 export class BenficiariesDto {
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()    
     bankName!: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()    
     accountName!: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsString()     
     accountNumber!: string;
 
-    @IsNotEmpty()
-    @IsString()
-    user!: string 
-  
+    
+    @JoiSchema(Joi.string().required())
+    @JoiSchema([CREATE], Joi.string().required())
+    @JoiSchema([UPDATE], Joi.string().optional())
+    user!: string  
 
 }

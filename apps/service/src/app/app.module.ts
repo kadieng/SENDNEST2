@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { MailingModule } from './mailing/mailing.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TransactionModule } from './transaction/transaction.module';
+import { JoiPipeModule } from 'nestjs-joi';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TransactionModule } from './transaction/transaction.module';
     MailingModule,
     UsersModule,
     DatabaseModule,
+    JoiPipeModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['_env/.env'],

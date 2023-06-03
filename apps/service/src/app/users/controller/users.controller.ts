@@ -10,6 +10,8 @@ import {
   UploadedFile,
   UseGuards,
   Req,
+  Res ,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { CreateUserDto, UserInterface, UpdateUserDto, verifyTokenInterface, GetUser } from "@wiremon";
@@ -19,6 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Multer } from 'multer';
 import { BeneficiariesInterface } from 'libs/share/src/interfaces/user/beneficiaries.interface';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 
 @ApiTags('Users')
 @Controller('users')
@@ -30,9 +33,31 @@ export class UsersController {
 
 
   @Post('/signup')
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body(ValidationPipe) createUserDto: CreateUserDto,@Res() res: Response) {
+    const emailExists = await this.usersService.checkEmailExists(createUserDto.email);
+    const userNameExists = await this.usersService.checkUserNameExists(createUserDto.username);
     
-    return this.usersService.create(createUserDto);
+    if (emailExists) {
+      return res.status(400).json({
+        "statusCode":400,
+        "message": 'user email already exist',
+        "error": "Bad Request"
+      })
+    }
+
+    if (userNameExists) {
+      return res.status(400).json({
+        "statusCode":400,
+        "message": 'user with username already exist',
+        "error": "Bad Request"
+      })
+    }
+    
+    const data = await this.usersService.create(createUserDto);
+    return res.status(201).json({
+      data,
+      message:'success'
+    })
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -49,7 +74,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body(ValidationPipe) updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
@@ -92,7 +117,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/create/beneficiaries')
-  async createBeneficiaries(@GetUser() user, @Body() payload: BeneficiariesInterface) {
+  async createBeneficiaries(@GetUser() user, @Body(ValidationPipe) payload: BeneficiariesInterface) {
     payload.user = user.id;
     return this.usersService.createBeneficiaries(payload);
   }

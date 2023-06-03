@@ -1,36 +1,38 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+// import { JoiSchema,UPDATE } from 'nestjs-joi';
+// import * as Joi from 'joi';
 
 export class UpdateUserDto {
 
     @IsString()
-    @IsOptional()
+    @IsOptional()   
     username?: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional()    
     phone?: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional()   
     firstName?: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional()    
     lastName?: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional()   
     middleName?: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional()   
     country?: string;
 
     @IsString()
-    @IsOptional()
+    @IsOptional()   
     state?: string;
 
     @IsOptional()
-    @IsString()
+    @IsString()    
     address?: string;
 }
