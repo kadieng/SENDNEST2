@@ -56,8 +56,10 @@ export class UsersController {
     
     const data = await this.usersService.create(createUserDto);
     return res.status(201).json({
+      "statusCode": 400,
+      "message":"success",
       data,
-      message:'success'
+      
     })
   }
 
@@ -108,6 +110,7 @@ export class UsersController {
   async verifyUserOtp(@Body() payload: verifyTokenInterface, @Res() res:Response) {
      try {
        const data = await this.usersService.verifyUserToken(payload);
+       
        if (!data) {
          return res.status(400).json({
             "statusCode":400,

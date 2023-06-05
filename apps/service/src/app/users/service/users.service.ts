@@ -109,15 +109,15 @@ export class UsersService {
   }
 
   async verifyUserToken(payload: verifyTokenInterface): Promise<Object> {
-    try {
+    try {    
 
-      const verifyUser = await this.UserSignupModel.findOne({ email: payload.email });
-
-      if (verifyUser.otp == payload.otp) {
+      const verifyUser = await this.UserSignupModel.findOne({ email: payload.email,isvalied:true});
+      
+      if(verifyUser.otp == payload.otp) {
         const updateUser = await this.UserModel.findOneAndUpdate({ email: verifyUser.email }, { IsVerified: true }, { new: true }).select('-__v -password');
-        return updateUser;        
-      } 
-      return false
+        const updateUservaliedstate = await this.UserSignupModel.findOneAndUpdate({ email: verifyUser.email }, {isvalied: false });
+        return updateUser;
+      }     
     } catch (error) {
       return error.massage;
     }
