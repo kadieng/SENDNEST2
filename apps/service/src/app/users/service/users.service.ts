@@ -75,7 +75,7 @@ export class UsersService {
   }
 
   async getUser(email: string): Promise<User> {
-    const user = await this.UserModel.findOne({ email });
+    const user = await this.UserModel.findOne({ email }).select('-__v -password');
     if (!user) {
       throw new NotFoundException("user not found");
     }

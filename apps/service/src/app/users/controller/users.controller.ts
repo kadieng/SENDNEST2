@@ -40,6 +40,18 @@ import { Response } from 'express';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/me')
+  async getUser(@GetUser() user, @Res() res: Response) {
+    console.log(user)
+    const data = await this.usersService.getUser(user.email);
+    return res.status(200).json({
+      statusCode: 200,
+      message: 'success',
+      data,
+    });
+  }
+
   @Post('/signup')
   async create(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
@@ -226,14 +238,5 @@ export class UsersController {
     });
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/me')
-  async getUser(@GetUser() user, @Res() res: Response) {
-    const data = await this.usersService.getUser(user.email);
-    return res.status(200).json({
-      statusCode: 200,
-      message: 'success',
-      data,
-    });
-  }
+ 
 }
