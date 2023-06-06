@@ -31,13 +31,19 @@ export class AuthService {
   async login(user: any) {
     try {
       const check = await this.validateUser(user.email, user.password);
-      // console.log(check)
+      
       if (check) {
-        if (check._doc.IsVerified == true) {
-          const payload = { email: user.email };
-          return { access_token: this.jwtService.sign(payload) }
+        if (check._doc.IsVerified == true) {          
+          const payload = { user: check._doc };          
+          return {
+            "statusCode":201,
+            "access_token": this.jwtService.sign(payload),
+            "message":"success"
+          }
         }
-        return { message: "user not verified" }
+        return {
+          "message": "user not verified"
+        }
       } else {
         return { message: "invalide details" }
       }

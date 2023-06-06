@@ -206,4 +206,6 @@ export class UsersService {
     return await this.BeneficiariesModel.find({ user: userId });
   }
 
+  
+
 }
